@@ -29,7 +29,7 @@ void recvStuff():
         receivedChars += Serial1.read()
    
     int start_pos = 0
-    int count = 0
+    uint32 count = 0
     while(count < receivedChars.length()):
         if(receivedChars.get_char(count) == '<'):
             start_pos = count
