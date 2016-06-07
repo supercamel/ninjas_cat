@@ -1,0 +1,56 @@
+/**
+ * Robins 3rd example from the Serial Input Basics thread on the Arduino forums.
+ *
+ * http://forum.arduino.cc/index.php?topic=396450.0
+ *
+ * Implemented in CoffeeCat using Ninjaskit and targeting the STM32F103C8T6 microcontroller.
+ */
+
+extern("#include <ninjaskit/ninjaskit.h>")
+
+
+extern("constexpr uint32 num_chars = 32")
+
+global var receivedChars = String<num_chars>()
+global bool newData = false
+
+void setup():
+    Serial1.begin(9600)
+    Serial1.println("<Arduino is ready>")
+
+void loop():
+    recvStuff()
+    showNewData()
+
+void recvStuff():
+    receivedChars.clear()
+    var raw_chars = String<num_chars>()
+    while(Serial1.available()):
+        receivedChars += Serial1.read()
+   
+    int start_pos = 0
+    int count = 0
+    while(count < receivedChars.length()):
+        if(receivedChars.get_char(count) == '<'):
+            start_pos = count
+        else if(receivedChars.get_char(count) == '>'):
+            raw_chars.sub_string(out receivedChars, start_pos, count)
+            newData = true
+            break
+        count += 1
+   
+void showNewData():
+    if(newData):
+        Serial1.print("This just in ... ")
+        Serial1.println(receivedChars)
+        newData = false
+
+
+
+int main():
+	clock_setup()
+	
+	setup()
+	while(true):
+		loop()
+	
