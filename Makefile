@@ -39,7 +39,7 @@ $(ELF_NAME): $(OBJS)
 	@$(LD) $(CFLAGS) -c $< -o $@
 	
 $(SOURCES):
-	CoffeeCat -o ./ $(COFFEECAT)
+	ccat -o ./ $(COFFEECAT)
 
 clean:
 	$( echo -e "\t")

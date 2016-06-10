@@ -6,16 +6,16 @@
  * Implemented in CoffeeCat using Ninjaskit and targeting the STM32F103C8T6 microcontroller.
  */
 
-extern("#include <ninjaskit/ninjaskit.h>")
+extern_header("#include <ninjaskit/ninjaskit.h>")
 
 
-extern("constexpr uint32 num_chars = 32")
+extern_header("constexpr uint32 num_chars = 32;")
 
 global var receivedChars = String<num_chars>()
 global bool newData = false
 
 void setup():
-    Serial1.begin(9600)
+    Serial1.begin(57600)
     Serial1.println("<Arduino is ready>")
 
 void loop():
@@ -26,15 +26,16 @@ void recvStuff():
     receivedChars.clear()
     var raw_chars = String<num_chars>()
     while(Serial1.available()):
-        receivedChars += Serial1.read()
+        char c = Serial1.read()
+        raw_chars += c
    
     int start_pos = 0
     uint32 count = 0
-    while(count < receivedChars.length()):
-        if(receivedChars.get_char(count) == '<'):
-            start_pos = count
-        else if(receivedChars.get_char(count) == '>'):
-            raw_chars.sub_string(out receivedChars, start_pos, count)
+    while(count < raw_chars.length()):
+        if(raw_chars.get_char(count) == '<'):
+            start_pos = count+1
+        else if(raw_chars.get_char(count) == '>'):
+            raw_chars.sub_string(out receivedChars, start_pos, count-start_pos)
             newData = true
             break
         count += 1
@@ -53,4 +54,5 @@ int main():
 	setup()
 	while(true):
 		loop()
+		sleep_ms(200)
 	
