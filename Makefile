@@ -38,8 +38,11 @@ $(ELF_NAME): $(OBJS)
 .c.o:
 	@$(LD) $(CFLAGS) -c $< -o $@
 	
-$(SOURCES):
+$(SOURCES): ccat
+	
+ccat:
 	ccat -o ./ $(COFFEECAT)
+
 
 clean:
 	$( echo -e "\t")

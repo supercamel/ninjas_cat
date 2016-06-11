@@ -54,5 +54,5 @@ int main():
 	setup()
 	while(true):
 		loop()
-		sleep_ms(200)
+		sleep_ms(100)
 	
